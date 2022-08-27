@@ -1154,9 +1154,13 @@ func (c *Client) PinChatMessage(chatID string, messageID int, opts ...SendOption
 /*
 UnpinChatMessage unpin a message in a supergroup or a channel
 */
-func (c *Client) UnpinChatMessage(chatID string) error {
+func (c *Client) UnpinChatMessage(chatID string, messageID int, opts ...SendOption) error {
 	req := url.Values{}
 	req.Set("chat_id", chatID)
+	req.Set("message_id", fmt.Sprint(messageID))
+	for _, opt := range opts {
+		opt(req)
+	}
 	var unpinned bool
 	return c.doRequest("unpinChatMessage", req, &unpinned)
 }
