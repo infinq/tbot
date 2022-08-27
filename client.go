@@ -1000,6 +1000,23 @@ func (c *Client) GetFile(fileID string) (*File, error) {
 	return file, err
 }
 
+/*
+SearchForMessages returns Message objects based on the supplied search
+*/
+func (c *Client) SearchForMessages(chatID string, opts ...SendOption) (*Message, error) {
+	req := url.Values{}
+	req.Set("chat_id", chatID)
+
+	//"filter":{"@type":"searchMessagesFilterPhoto"
+	for _, opt := range opts {
+		opt(req)
+	}
+
+	msg := &Message{}
+	err := c.doRequest("getMessages", req, msg)
+	return msg, err
+}
+
 // KickChatMember options
 var (
 	OptUntilDate = func(date time.Time) SendOption {
